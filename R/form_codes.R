@@ -91,3 +91,4 @@ form_codes <- function(set_cz = TRUE){
   forms <- as_tibble(mapa_vykazu)
   return(forms)
 }
+form_codes()
