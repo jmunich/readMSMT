@@ -1,0 +1,12 @@
+Package: readMSMT
+Version: 0.1
+Date: 2020-27-1
+Title: Retrieve data from MSMT CZ files
+Author: Jiri Munich <munich.jiri@gmail.com>
+Maintainer: Jiri Munich <munich.jiri@gmail.com>
+Description: A tool for search and retrieval of variables from Czech Ministry of Education data
+Imports:
+    tidyverse,
+    readxl
+License: MIT + file LICENSE
+RoxygenNote: 7.0.2
