@@ -45,6 +45,9 @@ get_varnames <- function(location=NULL, forms=NULL, years=NULL){
   for(i in 1:nrow(location_select)){
     variables[[i]] <- names(read_excel(path = location_select$directory[i],
                                sheet = location_select$sheet_name[i], n_max = 0))
+    if(i %% 20 == 0){
+      print(paste0(20,"/",nrow(location_select)))
+    }
   }
   variables_lc<-lapply(variables, tolower)
   output <- list(meta_data = location_select, varlist = variables, varlist_lc = variables_lc)
