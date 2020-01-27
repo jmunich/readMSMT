@@ -1,5 +1,6 @@
 #' Get a tibble with form name legend
 #'
+#' @export
 #' @import tidyverse
 #' @import readxl
 #' @examples
