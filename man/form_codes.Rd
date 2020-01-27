@@ -7,7 +7,7 @@
 form_codes(cz = TRUE)
 }
 \description{
-Get a tibble with form name legend
+Returns a guide to form codes
 }
 \examples{
 form_codes()

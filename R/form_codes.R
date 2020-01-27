@@ -1,5 +1,7 @@
 #' Get a tibble with form name legend
 #'
+#' Returns a guide to form codes
+#'
 #' @export
 #' @import tidyverse
 #' @import readxl
