@@ -9,7 +9,7 @@
 #' form_codes()
 
 form_codes <- function(cz = TRUE){
-
+  require(tidyverse)
   if(cz){
     set_cz()
   }
