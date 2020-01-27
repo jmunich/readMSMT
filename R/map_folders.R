@@ -17,7 +17,7 @@ map_folders <- function(location = NULL, save_map = TRUE, return_map = FALSE){
   require(tidyverse, quietly = TRUE)
   require(readxl, quietly = TRUE)
 
-  if(!(length(location)==1&is.character(location))|is.null(location)){
+  if(!((length(location)==1&is.character(location))|is.null(location))){
     stop("location must be a character of length 1 or empty")
   }
 
