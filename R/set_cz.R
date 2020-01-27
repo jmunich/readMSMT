@@ -2,11 +2,11 @@
 #'
 #' @import tidyverse
 #' @import readxl
-#' @export
 #' @examples
 #' set_cz()
+#' @export
 
-set_cz<-function(){
+set_cz <- function(){
   if (.Platform$OS.type == 'windows') {
     Sys.setlocale(category = 'LC_ALL','English_United States.1250')
   } else {

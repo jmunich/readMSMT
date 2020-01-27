@@ -5,9 +5,9 @@
 #' @examples
 #' form_codes()
 
-form_codes <- function(set_cz = TRUE){
+form_codes <- function(cz = TRUE){
 
-  if(set_cz){
+  if(cz){
     set_cz()
   }
 
@@ -88,7 +88,7 @@ form_codes <- function(set_cz = TRUE){
       "S 53-01"
     )
   )
-  forms <- as_tibble(mapa_vykazu)
+  forms <- as_tibble(mapa_vykazu) %>%
+    mutate(popis = enc2utf8(popis))
   return(forms)
 }
-form_codes()

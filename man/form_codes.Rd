@@ -4,7 +4,7 @@
 \alias{form_codes}
 \title{Get a tibble with form name legend}
 \usage{
-form_codes()
+form_codes(cz = TRUE)
 }
 \description{
 Get a tibble with form name legend

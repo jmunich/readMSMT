@@ -9,4 +9,6 @@ Imports:
     tidyverse,
     readxl
 License: MIT + file LICENSE
+Encoding: UTF-8
 RoxygenNote: 7.0.2
+
