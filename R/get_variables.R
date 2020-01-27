@@ -69,8 +69,8 @@ get_variables<-function(variables, joint=c("red_izo","izo","p_izo","izonew"), ma
 
   location_select<-variable_maps$meta_data[colSums(sel_mat)>0,] %>% filter((form%in%forms)&(year%in%years)) %>% distinct(sheet_name, .keep_all = TRUE)
 
-  if(max(location_select$occurences)>1){
-    warning(paste0("File(s) ",paste(location_select$sheet[location_select$occurences>1], collapse = ", ")," have two or more occurences. Using the first file."))
+  if(max(location_select$occurrences)>1){
+    warning(paste0("File(s) ",paste(location_select$sheet[location_select$occurrences>1], collapse = ", ")," have two or more occurrences. Using the first file."))
   }
   varlist<-varlist[location_select$id]
 
