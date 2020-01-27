@@ -44,7 +44,7 @@ map_folders <- function(location = NULL, save_map = TRUE, return_map = FALSE){
   output <- get_varnames(location = location)
 
   if(!is.null(save_to)){
-    saveRDS(output, paste0(save_to,"MSMT_data_map.RDATA"))
+    saveRDS(output, paste0(save_to,"/MSMT_data_map.RDATA"))
   }
   if(return_map){
     return(output)
