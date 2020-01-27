@@ -1,0 +1,163 @@
+---
+title: "readMSMT README"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Put the title of your vignette here}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(readMSMT)
+```
+
+## Úvod
+
+Účel balíčku readMSMT je poskytnout nástroj zjednodušující práci s daty z výkazů sbíraných MŠMT. Jelikož data vyžádatelná občanem mohou nabývat podoby až několika set excelových tabulek, readMSMT vytváří prostředí, které nevyžaduje zásadní úpravy v původních datech a na vyžádání vrací proměnné z let a výkazů vybraných uživatelem v přehledné podobě. Účel balíčku je následující:
+
+1. Vytvořit mapu uložených dat
+2. Na požádání vrátit vyžádané proměnné
+3. Usnadnit propojování s jinými datovými sety
+
+Balíček readMSMT operuje na základě balíčků dplyr a readxl. Využívá syntax a funkce z tidyverse, ale lze s ním pracovat i bez znalosti těchto balíčků.
+
+Začněte instalací balíčku:
+
+```{r, eval=FALSE}
+devtools::install_github("jmunich/readMSMT")
+```
+
+A pokračujte jeho spuštěním:
+
+```{r}
+library(readMSMT)
+```
+
+## Využití
+
+Data MŠMT jsou sbírána skrze výkazy vyplňované řediteli škol. Data z jednotivých výkazů za každý rok jsou často rozdělená do několika excelových tabulek (sheets). Balíček operuje s názvy těchto tabulek. Názvy tabulek by měly v zálkladní podobě dodržovat následující formát: vXXYYaaa. Každý kód začíná písmenem "v". XX reprezentuje číslo výkazu a YY rok. Pod znaky aaa bývá specifický podkód tabulky. Dělení na tabulky s podkódy ale není napříč lety konzistentní. Například data z výkazu M-03 za rok 2019 mohou být rozdělena do tabulek se jmény v0319a, v0319b, v0319c. Balíček obsahuje funkci která vrací tabulku s popisy kódů výkazů: 
+
+```{r}
+## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
+set_cz()
+guide <- form_codes()
+print(guide)
+```
+
+## Setup
+
+První krok je samozřejmě získání samotných dat. To lze buď přátelským kontaktování MŠMT, nebo formálně přes žádost podle zákona č. 106/1999 Sb., o svobodném přístupu k informacím (vzor žádosti by měl být snadno dohledatelný). Data by měla být zorganizována podle výše popsaného kódování. Poté je stačí uložit do jedné složky.
+
+Jednotlivé tabulky poskytuje MŠMT buď ve formátu .xls nebo .xlsx. Z toho důvodu readMSMT využívá funkci read_excel() z balíčku readxl. Opakované pročítání velkého počtu excelových tabulek ve snaze najít hledané proměnné může být výpočetně zdlouhavé. Proto doporučujeme jednorázové vytvoření mapy složek s daty, která shrne výskyty proměnných v jednotlivých dokumentech a umožní efektivnější načítání dat. Funkce map_folders() takové shrnutí vytváří. Stačí ji spustit jednou při prvním použití balíčku a následně jen při provádění jakýchkoliv změn struktury složky s daty nebo obsahu datových souborů.
+
+
+### Vytvoření mapy souborů a proměnných
+
+Funkce vytvoří soubor *MSMT_data_map.RDATA*, který bude uložen v pracovním direktoriáři k načtení při dalším využtí dat. Vytvoření souboru může zabrat nějaký čas. Když se program dostane k pročítání jednotlivých souborů, začne svůj pokrok zobrazovat v konzoli. Existuje několi způsobů, jak lze mapu vytvořit. Vytvoříte-li mapu s uložením, stačí ji vytvořit pouze jednou.
+
+Pro vytvoření mapy, je-li složka s daty podsložkou pracovního direktoriáře:
+
+```{r, eval = FALSE}
+map_folders()
+```
+
+Pro vytvoření mapy, je-li složka s daty podsložkou jiného direktoriáře
+
+```{r, eval = FALSE}
+map_folders(location = "E:/EDU/Data/data/MSMT/") ## Vložte vlastní adresu
+```
+
+Pro vytvoření mapy konkrétní složky, její uložení v konkrétní složce a vytvoření objektu **my_map** s mapou
+
+```{r, eval = FALSE}
+my_map <- map_folders(location = "E:/EDU/Data/data/MSMT/", save_map = "E:/EDU/Data/", return_map = TRUE)
+```
+
+Mapu lze kdykoliv vytvořit i jako objekt bez ukládání nebo přepisování souboru
+
+```{r, eval = FALSE}
+my_map <- map_folders(save_map = FALSE, return_map = TRUE)
+```
+
+### Načtení mapy
+
+Po uložení lze objekt s mapou kdykoliv načíst, buď za použití plné adresy...
+
+```{r}
+my_map <- readRDS("E:/EDU/Data/MSMT_data_map.RDATA")
+```
+
+...nebo, je-li soubor v pracovním direktoriáři, názvem souboru:
+
+```{r, eval = FALSE}
+my_map <- readRDS("MSMT_data_map.RDATA")
+```
+
+### Struktura mapy
+
+Mapa dat obsahuje tři objekty. První je tabulka meta_data, která shrnuje lokace soubourů s relevantními daty (directory), název tabulky a jeho verzi v lowercase (sheet_name a sheet), kód výkazu (form), rok (year) a počet výskytů tabulky v datech pro případ duplikátů (occurences).
+
+```{r}
+my_map$meta_data
+```
+
+Další dva objekty obsahují listy s názvy proměnných v jednotlivých tabulkách. Objekt varlist obsahuje původní názvy proměnných, objekt varlist_lc obsahuje názvy transformované do lowercase, pro případ rozdílů mezi tabulkami.
+
+```{r}
+## Prvních třicet proměnných první tabulky
+head(my_map$varlist[[1]], 30)
+```
+
+## Využití
+
+Když je mapa vytvořena nebo načtena, funkce get_variables() s její pomocí identifikuje soubory obsahující vyhledávané proměnné a následně hodnoty těchto proměnných načte do nového objektu. I za využití mapy může vyhledávání trvat několik okamžiků.
+
+```{r}
+tibble_list <- get_variables(variables = c("r15013","r15013a"), # Vektor vyhledávaných proměnných
+              map = my_map, # Mapa dat: není-li specifikována, funkce se ji pokusí najít v pracovním direktoriáři. Lze uvézt i adresu souboru obsahujícího mapu.
+              joint = c("izo","red_izo"), # Názvy dalších proměnných, které budou zahrnuty do výběru. Defaultně obsahuje základní identifikátory
+              forms = "v08", # Vektor (nebo samostatný character) určující žádoucí výkazy. Prázdný argument prohledá všechny výkazy
+              years = c("12","13","14","15","16","17","18") # Vektor obsahující žádoucí roky. Prázdný argument prohledá všechny roky
+              )
+```
+
+Funkce vrací list se dvěma objekty. První jsou průvodná meta_data pro využité soubory. Druhý objekt (variables) obsahuje tabulky se získanými daty. Ke každé tabulce je přidána proměnná s příslušným rokem.
+
+```{r}
+tibble_list$variables$v0812a_2
+tibble_list$variables$v0813a_2
+```
+
+Takto vzniklý list lze například za využití balíčku dplyr propojit do jedné tabulky v long formátu.
+
+```{r}
+long_data <- dplyr::bind_rows(tibble_list$variables)
+long_data
+```
+
+## Propojování s dalšími daty
+
+Takto vzniklé soubory lze přes identifikátory škol propojit s dalšími datovými soubory. Tyto identifikátory se v datech vyskytují čtyři: "red_izo","izo","p_izo" a "izonew". Identifikátor "red_izo" značí ředitelství, pod které může spadat jedno, ale i několik školských zařízení. Identifikátory "izo","p_izo" a "izonew" pak značí jednotlivá zařízení, s tím, že v některých letech se objevuje "p_izo" a v některých "izonew". V tuhle chvíli sice mám teorii o tom, kde se berou, ale musím ji ještě ověřit.
+
+V následujícím příkladě propojuji na základě red_izo data z výkazů s daty z adresáře škol. Je důležité počítat s tím, že některé identifikátory nemusí být v adresáři obsažené. Pokusím se vymyslet, co s tím.
+
+```{r}
+adresy<-read_excel("E:/EDU/Data/data/IZOCODES/Adresar.xlsx")%>%
+  select(RED_IZO, Území, ORP)%>%
+  mutate_all(as.character)
+names(adresy)<-tolower(names(adresy))
+
+joint <- left_join(long_data,adresy, by = "red_izo")
+unique(joint$území)
+print(joint)
+```
+
+S daty lze pak dělat psí kusy.
+
+```{r}
+ggplot(joint, aes(x = as.numeric(year), y=log(r15013), color=substr(území, 1,4), fill=substr(území, 1,4)))+
+  geom_count()+theme(legend.position = "none")+geom_line(aes(group=red_izo))
+```

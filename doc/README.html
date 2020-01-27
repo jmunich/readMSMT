@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>readMSMT README</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">readMSMT README</h1>
+
+
+
+<div id="úvod" class="section level2">
+<h2>Úvod</h2>
+<p>Účel balíčku readMSMT je poskytnout nástroj zjednodušující práci s daty z výkazů sbíraných MŠMT. Jelikož data vyžádatelná občanem mohou nabývat podoby až několika set excelových tabulek, readMSMT vytváří prostředí, které nevyžaduje zásadní úpravy v původních datech a na vyžádání vrací proměnné z let a výkazů vybraných uživatelem v přehledné podobě. Účel balíčku je následující:</p>
+<ol style="list-style-type: decimal">
+<li>Vytvořit mapu uložených dat</li>
+<li>Na požádání vrátit vyžádané proměnné</li>
+<li>Usnadnit propojování s jinými datovými sety</li>
+</ol>
+<p>Balíček readMSMT operuje na základě balíčků dplyr a readxl. Využívá syntax a funkce z tidyverse, ale lze s ním pracovat i bez znalosti těchto balíčků.</p>
+<p>Začněte instalací balíčku:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;jmunich/readMSMT&quot;</span>)</code></pre></div>
+<p>A pokračujte jeho spuštěním:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readMSMT)</code></pre></div>
+</div>
+<div id="využití" class="section level2">
+<h2>Využití</h2>
+<p>Data MŠMT jsou sbírána skrze výkazy vyplňované řediteli škol. Data z jednotivých výkazů za každý rok jsou často rozdělená do několika excelových tabulek (sheets). Balíček operuje s názvy těchto tabulek. Názvy tabulek by měly v zálkladní podobě dodržovat následující formát: vXXYYaaa. Každý kód začíná písmenem “v”. XX reprezentuje číslo výkazu a YY rok. Pod znaky aaa bývá specifický podkód tabulky. Dělení na tabulky s podkódy ale není napříč lety konzistentní. Například data z výkazu M-03 za rok 2019 mohou být rozdělena do tabulek se jmény v0319a, v0319b, v0319c. Balíček obsahuje funkci která vrací tabulku s popisy kódů výkazů:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
+<span class="kw">set_cz</span>()</code></pre></div>
+<pre><code>## [1] &quot;LC_COLLATE=English_United States.1250;LC_CTYPE=English_United States.1250;LC_MONETARY=English_United States.1250;LC_NUMERIC=C;LC_TIME=English_United States.1250&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">guide &lt;-<span class="st"> </span><span class="kw">form_codes</span>()
+<span class="kw">print</span>(guide)</code></pre></div>
+<pre><code>## # A tibble: 23 x 3
+##    popis                                             kod_simple kod_msmt
+##    &lt;chr&gt;                                             &lt;chr&gt;      &lt;chr&gt;   
+##  1 Materská škola 30.9.                              V01        S 1-01  
+##  2 Školní družina/klub 31.10.                        V02        Z 2-01  
+##  3 Základní Škola 30.9.                              V03        M 3     
+##  4 MŠ-ZŠ pri zdravotnickém zarízení 30.9.            V04        S 4-01  
+##  5 Prihlášení a prijatí na konzervatore 30.9.        V05        S 5-01  
+##  6 Strední škola 30.9.                               V08        M 8     
+##  7 Konzervator 30.9.                                 V09        M 9     
+##  8 Vyšší odborná škola 30.9.                         V10        M 10    
+##  9 Reditelství škol 30.9.                            V13        M 13-01 
+## 10 Zarízení pro výkon ústavní-ochrané výchovy 31.10. V14        M 14-01 
+## # ... with 13 more rows</code></pre>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>První krok je samozřejmě získání samotných dat. To lze buď přátelským kontaktování MŠMT, nebo formálně přes žádost podle zákona č. 106/1999 Sb., o svobodném přístupu k informacím (vzor žádosti by měl být snadno dohledatelný). Data by měla být zorganizována podle výše popsaného kódování. Poté je stačí uložit do jedné složky.</p>
+<p>Jednotlivé tabulky poskytuje MŠMT buď ve formátu .xls nebo .xlsx. Z toho důvodu readMSMT využívá funkci read_excel() z balíčku readxl. Opakované pročítání velkého počtu excelových tabulek ve snaze najít hledané proměnné může být výpočetně zdlouhavé. Proto doporučujeme jednorázové vytvoření mapy složek s daty, která shrne výskyty proměnných v jednotlivých dokumentech a umožní efektivnější načítání dat. Funkce map_folders() takové shrnutí vytváří. Stačí ji spustit jednou při prvním použití balíčku a následně jen při provádění jakýchkoliv změn struktury složky s daty nebo obsahu datových souborů.</p>
+<div id="vytvoření-mapy-souborů-a-proměnných" class="section level3">
+<h3>Vytvoření mapy souborů a proměnných</h3>
+<p>Funkce vytvoří soubor <em>MSMT_data_map.RDATA</em>, který bude uložen v pracovním direktoriáři k načtení při dalším využtí dat. Vytvoření souboru může zabrat nějaký čas. Když se program dostane k pročítání jednotlivých souborů, začne svůj pokrok zobrazovat v konzoli. Existuje několi způsobů, jak lze mapu vytvořit. Vytvoříte-li mapu s uložením, stačí ji vytvořit pouze jednou.</p>
+<p>Pro vytvoření mapy, je-li složka s daty podsložkou pracovního direktoriáře:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">map_folders</span>()</code></pre></div>
+<p>Pro vytvoření mapy, je-li složka s daty podsložkou jiného direktoriáře</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">map_folders</span>(<span class="dt">location =</span> <span class="st">&quot;E:/EDU/Data/data/MSMT/&quot;</span>) ## Vložte vlastní adresu</code></pre></div>
+<p>Pro vytvoření mapy konkrétní složky, její uložení v konkrétní složce a vytvoření objektu <strong>my_map</strong> s mapou</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_map &lt;-<span class="st"> </span><span class="kw">map_folders</span>(<span class="dt">location =</span> <span class="st">&quot;E:/EDU/Data/data/MSMT/&quot;</span>, <span class="dt">save_map =</span> <span class="st">&quot;E:/EDU/Data/&quot;</span>, <span class="dt">return_map =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>Mapu lze kdykoliv vytvořit i jako objekt bez ukládání nebo přepisování souboru</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_map &lt;-<span class="st"> </span><span class="kw">map_folders</span>(<span class="dt">save_map =</span> <span class="ot">FALSE</span>, <span class="dt">return_map =</span> <span class="ot">TRUE</span>)</code></pre></div>
+</div>
+<div id="načtení-mapy" class="section level3">
+<h3>Načtení mapy</h3>
+<p>Po uložení lze objekt s mapou kdykoliv načíst, buď za použití plné adresy…</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_map &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;E:/EDU/Data/MSMT_data_map.RDATA&quot;</span>)</code></pre></div>
+<p>…nebo, je-li soubor v pracovním direktoriáři, názvem souboru:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_map &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;MSMT_data_map.RDATA&quot;</span>)</code></pre></div>
+</div>
+<div id="struktura-mapy" class="section level3">
+<h3>Struktura mapy</h3>
+<p>Mapa dat obsahuje tři objekty. První je tabulka meta_data, která shrnuje lokace soubourů s relevantními daty (directory), název tabulky a jeho verzi v lowercase (sheet_name a sheet), kód výkazu (form), rok (year) a počet výskytů tabulky v datech pro případ duplikátů (occurences).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_map<span class="op">$</span>meta_data</code></pre></div>
+<pre><code>## # A tibble: 743 x 6
+## # Groups:   sheet [585]
+##    directory                          sheet_name sheet   form  year  occurrences
+##    &lt;chr&gt;                              &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;int&gt;
+##  1 E:/EDU/Data/data/MSMT//2011_12/v0~ v0111_1    v0111_1 v01   11              1
+##  2 E:/EDU/Data/data/MSMT//2011_12/v0~ v0111_2    v0111_2 v01   11              1
+##  3 E:/EDU/Data/data/MSMT//2011_12/v0~ v0111o     v0111o  v01   11              1
+##  4 E:/EDU/Data/data/MSMT//2011_12/v0~ v0211      v0211   v02   11              1
+##  5 E:/EDU/Data/data/MSMT//2011_12/v0~ v0211o     v0211o  v02   11              1
+##  6 E:/EDU/Data/data/MSMT//2011_12/v0~ v0311a_1   v0311a~ v03   11              1
+##  7 E:/EDU/Data/data/MSMT//2011_12/v0~ v0311a_2   v0311a~ v03   11              1
+##  8 E:/EDU/Data/data/MSMT//2011_12/v0~ v0311a_3   v0311a~ v03   11              1
+##  9 E:/EDU/Data/data/MSMT//2011_12/v0~ v0311a_4   v0311a~ v03   11              1
+## 10 E:/EDU/Data/data/MSMT//2011_12/v0~ v0311a_5   v0311a~ v03   11              1
+## # ... with 733 more rows</code></pre>
+<p>Další dva objekty obsahují listy s názvy proměnných v jednotlivých tabulkách. Objekt varlist obsahuje původní názvy proměnných, objekt varlist_lc obsahuje názvy transformované do lowercase, pro případ rozdílů mezi tabulkami.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Prvních třicet proměnných první tabulky
+<span class="kw">head</span>(my_map<span class="op">$</span>varlist[[<span class="dv">1</span>]], <span class="dv">30</span>)</code></pre></div>
+<pre><code>##  [1] &quot;idc&quot;       &quot;red_izo&quot;   &quot;izo&quot;       &quot;list&quot;      &quot;izonew&quot;    &quot;zriz&quot;     
+##  [7] &quot;ulice&quot;     &quot;misto&quot;     &quot;typ&quot;       &quot;spr_urad3&quot; &quot;vusc&quot;      &quot;jazyk_s&quot;  
+## [13] &quot;rok&quot;       &quot;nvusc&quot;     &quot;ikf&quot;       &quot;zrus&quot;      &quot;zar_naz&quot;   &quot;dp&quot;       
+## [19] &quot;sp&quot;        &quot;sp_skoly&quot;  &quot;pu&quot;        &quot;r01012&quot;    &quot;r01013&quot;    &quot;r01022&quot;   
+## [25] &quot;r01023&quot;    &quot;r01032&quot;    &quot;r01042&quot;    &quot;r01043&quot;    &quot;r03012&quot;    &quot;r03013&quot;</code></pre>
+</div>
+</div>
+<div id="využití-1" class="section level2">
+<h2>Využití</h2>
+<p>Když je mapa vytvořena nebo načtena, funkce get_variables() s její pomocí identifikuje soubory obsahující vyhledávané proměnné a následně hodnoty těchto proměnných načte do nového objektu. I za využití mapy může vyhledávání trvat několik okamžiků.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tibble_list &lt;-<span class="st"> </span><span class="kw">get_variables</span>(<span class="dt">variables =</span> <span class="kw">c</span>(<span class="st">&quot;r15013&quot;</span>,<span class="st">&quot;r15013a&quot;</span>), <span class="co"># Vektor vyhledávaných proměnných</span>
+              <span class="dt">map =</span> my_map, <span class="co"># Mapa dat: není-li specifikována, funkce se ji pokusí najít v pracovním direktoriáři. Lze uvézt i adresu souboru obsahujícího mapu.</span>
+              <span class="dt">joint =</span> <span class="kw">c</span>(<span class="st">&quot;izo&quot;</span>,<span class="st">&quot;red_izo&quot;</span>), <span class="co"># Názvy dalších proměnných, které budou zahrnuty do výběru. Defaultně obsahuje základní identifikátory</span>
+              <span class="dt">forms =</span> <span class="st">&quot;v08&quot;</span>, <span class="co"># Vektor (nebo samostatný character) určující žádoucí výkazy. Prázdný argument prohledá všechny výkazy</span>
+              <span class="dt">years =</span> <span class="kw">c</span>(<span class="st">&quot;12&quot;</span>,<span class="st">&quot;13&quot;</span>,<span class="st">&quot;14&quot;</span>,<span class="st">&quot;15&quot;</span>,<span class="st">&quot;16&quot;</span>,<span class="st">&quot;17&quot;</span>,<span class="st">&quot;18&quot;</span>) <span class="co"># Vektor obsahující žádoucí roky. Prázdný argument prohledá všechny roky</span>
+              )</code></pre></div>
+<pre><code>## Warning in get_variables(variables = c(&quot;r15013&quot;, &quot;r15013a&quot;), map = my_map, :
+## File(s) v0817a_3 have two or more occurrences. Using the first file.</code></pre>
+<p>Funkce vrací list se dvěma objekty. První jsou průvodná meta_data pro využité soubory. Druhý objekt (variables) obsahuje tabulky se získanými daty. Ke každé tabulce je přidána proměnná s příslušným rokem.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tibble_list<span class="op">$</span>variables<span class="op">$</span>v0812a_<span class="dv">2</span></code></pre></div>
+<pre><code>## # A tibble: 1,379 x 4
+##    year  izo       red_izo   r15013
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;
+##  1 12    108022676 600007481      0
+##  2 12    108022722 600007472      0
+##  3 12    108023079 600005569      0
+##  4 12    108023087 600005585      0
+##  5 12    108024148 600012271      0
+##  6 12    108026736 600013014      6
+##  7 12    108026761 600024695      0
+##  8 12    108027457 600015831      5
+##  9 12    108028127 600013375      0
+## 10 12    108028135 600013260      0
+## # ... with 1,369 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tibble_list<span class="op">$</span>variables<span class="op">$</span>v0813a_<span class="dv">2</span></code></pre></div>
+<pre><code>## # A tibble: 1,343 x 4
+##    year  izo       red_izo   r15013
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;
+##  1 13    000013757 600006654     25
+##  2 13    000053155 600014614      5
+##  3 13    000053163 600014649      3
+##  4 13    000055069 600015408      0
+##  5 13    000055077 600015416      0
+##  6 13    000055107 600015483      0
+##  7 13    000064556 600006000      1
+##  8 13    000068772 600006972      2
+##  9 13    000068781 600006913      5
+## 10 13    000068799 600007081      1
+## # ... with 1,333 more rows</code></pre>
+<p>Takto vzniklý list lze například za využití balíčku dplyr propojit do jedné tabulky v long formátu.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">long_data &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_rows</span>(tibble_list<span class="op">$</span>variables)
+long_data</code></pre></div>
+<pre><code>## # A tibble: 9,852 x 5
+##    year  izo       red_izo   r15013 r15013a
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;
+##  1 12    108022676 600007481      0      NA
+##  2 12    108022722 600007472      0      NA
+##  3 12    108023079 600005569      0      NA
+##  4 12    108023087 600005585      0      NA
+##  5 12    108024148 600012271      0      NA
+##  6 12    108026736 600013014      6      NA
+##  7 12    108026761 600024695      0      NA
+##  8 12    108027457 600015831      5      NA
+##  9 12    108028127 600013375      0      NA
+## 10 12    108028135 600013260      0      NA
+## # ... with 9,842 more rows</code></pre>
+</div>
+<div id="propojování-s-dalšími-daty" class="section level2">
+<h2>Propojování s dalšími daty</h2>
+<p>Takto vzniklé soubory lze přes identifikátory škol propojit s dalšími datovými soubory. Tyto identifikátory se v datech vyskytují čtyři: “red_izo”,“izo”,“p_izo” a “izonew”. Identifikátor “red_izo” značí ředitelství, pod které může spadat jedno, ale i několik školských zařízení. Identifikátory “izo”,“p_izo” a “izonew” pak značí jednotlivá zařízení, s tím, že v některých letech se objevuje “p_izo” a v některých “izonew”. V tuhle chvíli sice mám teorii o tom, kde se berou, ale musím ji ještě ověřit.</p>
+<p>V následujícím příkladě propojuji na základě red_izo data z výkazů s daty z adresáře škol. Je důležité počítat s tím, že některé identifikátory nemusí být v adresáři obsažené. Pokusím se vymyslet, co s tím.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">adresy&lt;-<span class="kw">read_excel</span>(<span class="st">&quot;E:/EDU/Data/data/IZOCODES/Adresar.xlsx&quot;</span>)<span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(RED_IZO, Území, ORP)<span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate_all</span>(as.character)
+<span class="kw">names</span>(adresy)&lt;-<span class="kw">tolower</span>(<span class="kw">names</span>(adresy))
+
+joint &lt;-<span class="st"> </span><span class="kw">left_join</span>(long_data,adresy, <span class="dt">by =</span> <span class="st">&quot;red_izo&quot;</span>)
+<span class="kw">unique</span>(joint<span class="op">$</span>území)</code></pre></div>
+<pre><code>##  [1] &quot;CZ0207&quot; &quot;CZ0105&quot; &quot;CZ0523&quot; NA       &quot;CZ0525&quot; &quot;CZ0635&quot; &quot;CZ0641&quot; &quot;CZ0511&quot;
+##  [9] &quot;CZ0104&quot; &quot;CZ0102&quot; &quot;CZ0422&quot; &quot;CZ0513&quot; &quot;CZ0713&quot; &quot;CZ0323&quot; &quot;CZ0325&quot; &quot;CZ0805&quot;
+## [17] &quot;CZ0514&quot; &quot;CZ0426&quot; &quot;CZ0424&quot; &quot;CZ0724&quot; &quot;CZ0423&quot; &quot;CZ0804&quot; &quot;CZ0632&quot; &quot;CZ020B&quot;
+## [25] &quot;CZ0208&quot; &quot;CZ0209&quot; &quot;CZ0314&quot; &quot;CZ0644&quot; &quot;CZ0107&quot; &quot;CZ0425&quot; &quot;CZ0101&quot; &quot;CZ0103&quot;
+## [33] &quot;CZ0647&quot; &quot;CZ0109&quot; &quot;CZ0106&quot; &quot;CZ0108&quot; &quot;CZ0712&quot; &quot;CZ0202&quot; &quot;CZ0642&quot; &quot;CZ0421&quot;
+## [41] &quot;CZ0802&quot; &quot;CZ0714&quot; &quot;CZ0411&quot; &quot;CZ0531&quot; &quot;CZ0313&quot; &quot;CZ0803&quot; &quot;CZ0204&quot; &quot;CZ0721&quot;
+## [49] &quot;CZ0206&quot; &quot;CZ0533&quot; &quot;CZ0715&quot; &quot;CZ0317&quot; &quot;CZ0534&quot; &quot;CZ0646&quot; &quot;CZ0521&quot; &quot;CZ0532&quot;
+## [57] &quot;CZ0806&quot; &quot;CZ0645&quot; &quot;CZ0634&quot; &quot;CZ0722&quot; &quot;CZ0512&quot; &quot;CZ0327&quot; &quot;CZ0427&quot; &quot;CZ0316&quot;
+## [65] &quot;CZ0723&quot; &quot;CZ0643&quot; &quot;CZ0633&quot; &quot;CZ0201&quot; &quot;CZ0321&quot; &quot;CZ0711&quot; &quot;CZ0311&quot; &quot;CZ0631&quot;
+## [73] &quot;CZ0412&quot; &quot;CZ0203&quot; &quot;CZ010A&quot; &quot;CZ0326&quot; &quot;CZ0205&quot; &quot;CZ020C&quot; &quot;CZ0312&quot; &quot;CZ0522&quot;
+## [81] &quot;CZ0322&quot; &quot;CZ0413&quot; &quot;CZ0524&quot; &quot;CZ020A&quot; &quot;CZ0315&quot; &quot;CZ0801&quot; &quot;CZ0324&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(joint)</code></pre></div>
+<pre><code>## # A tibble: 9,852 x 7
+##    year  izo       red_izo   r15013 r15013a území  orp  
+##    &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 12    108022676 600007481      0      NA CZ0207 2115 
+##  2 12    108022722 600007472      0      NA CZ0207 2115 
+##  3 12    108023079 600005569      0      NA CZ0105 1116 
+##  4 12    108023087 600005585      0      NA CZ0105 1116 
+##  5 12    108024148 600012271      0      NA CZ0523 5209 
+##  6 12    108026736 600013014      6      NA &lt;NA&gt;   &lt;NA&gt; 
+##  7 12    108026761 600024695      0      NA CZ0525 5203 
+##  8 12    108027457 600015831      5      NA CZ0635 6115 
+##  9 12    108028127 600013375      0      NA &lt;NA&gt;   &lt;NA&gt; 
+## 10 12    108028135 600013260      0      NA CZ0641 6201 
+## # ... with 9,842 more rows</code></pre>
+<p>S daty lze pak dělat psí kusy.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(joint, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">as.numeric</span>(year), <span class="dt">y=</span><span class="kw">log</span>(r15013), <span class="dt">color=</span><span class="kw">substr</span>(území, <span class="dv">1</span>,<span class="dv">4</span>), <span class="dt">fill=</span><span class="kw">substr</span>(území, <span class="dv">1</span>,<span class="dv">4</span>)))<span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_count</span>()<span class="op">+</span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)<span class="op">+</span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>red_izo))</code></pre></div>
+<pre><code>## Warning: Removed 6215 rows containing non-finite values (stat_sum).</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
