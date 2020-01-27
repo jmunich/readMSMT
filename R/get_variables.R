@@ -9,6 +9,7 @@
 #' @return a list of tibbles with requested variables and identifiers, and a tibble with information about used sheets. To join into a single tibble, use bind_rows() on the tibble list.
 #' @import tidyverse
 #' @import readxl
+#' @export
 #' @examples
 #' mymap <- get_locations("E:/EDU/Data/data/MSMT/")
 #' get_variables(variables = c("r01010","r01011"), map = my_map, forms = "v03", years = c("12","13"))

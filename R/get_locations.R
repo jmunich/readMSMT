@@ -6,6 +6,7 @@
 #' @return a tibble with all sheets, specifying their location, names, lowercased name, form they are from, year and frequency of occurences in the folders.
 #' @import tidyverse
 #' @import readxl
+#' @export
 #' @examples
 #' get_locations("E:/EDU/Data/data/MSMT/")
 

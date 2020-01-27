@@ -8,6 +8,7 @@
 #' @return A list containing locations of excel sheets and variable names occurring in the sheets.
 #' @import tidyverse
 #' @import readxl
+#' @export
 #' @examples
 #' map_folders(location = "E:/EDU/Data/data/MSMT/")
 

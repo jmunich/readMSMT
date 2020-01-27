@@ -2,6 +2,7 @@
 #'
 #' @import tidyverse
 #' @import readxl
+#' @export
 #' @examples
 #' set_cz()
 

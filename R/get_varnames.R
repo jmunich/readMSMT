@@ -8,6 +8,7 @@
 #' @return a list of values indicating files with repeated rows
 #' @import tidyverse
 #' @import readxl
+#' @export
 #' @examples
 #' mymap <- get_locations("E:/EDU/Data/data/MSMT/")
 #' get_varnames(location = mymap, forms = "v11")
