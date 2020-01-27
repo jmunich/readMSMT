@@ -22,7 +22,7 @@ map_folders <- function(location = NULL, save_map = TRUE, return_map = FALSE){
   }
 
   if(!((length(save_map)==1&is.character(save_map))|is.logical(save_map))){
-    stop("location must be a character of length 1 or a logical")
+    stop("save_map must be a character of length 1 or a logical")
   }
 
   if(is.null(location)){

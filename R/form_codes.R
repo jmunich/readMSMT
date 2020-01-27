@@ -5,7 +5,12 @@
 #' @examples
 #' form_codes()
 
-form_codes <- function(){
+form_codes <- function(set_cz = TRUE){
+
+  if(set_cz){
+    set_cz()
+  }
+
   mapa_vykazu<-list(
     popis=c(
       "Mateřská škola 30.9.",
