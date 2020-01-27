@@ -38,7 +38,8 @@ M-03 za rok 2019 mohou být rozdělena do tabulek se jmény v0319a, v0319b,
 v0319c. Balíček obsahuje funkci která vrací tabulku s popisy kódů
 výkazů:
 
-    ## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
+    ## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), 
+    ## nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
     set_cz()
 
     ## [1] "LC_COLLATE=English_United States.1250;LC_CTYPE=English_United States.1250;LC_MONETARY=English_United States.1250;LC_NUMERIC=C;LC_TIME=English_United States.1250"
