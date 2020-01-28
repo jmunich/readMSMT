@@ -163,10 +163,23 @@ rozdílů mezi tabulkami.
 Využití
 -------
 
-Když je mapa vytvořena nebo načtena, funkce get\_variables() s její
+Když je mapa vytvořena nebo načtena, funkce balíčku s její
 pomocí identifikuje soubory obsahující vyhledávané proměnné a následně
 hodnoty těchto proměnných načte do nového objektu. I za využití mapy
 může vyhledávání trvat několik okamžiků.
+
+V první řadě lze mapu využít ke zjištění dostupnosti proměnných. Funkce
+get\_variable\_availability() přijímá vektor vyžádaných proměnných a 
+výkazů. Vrací list s tibbles obsahujícími vyžádané proměnné v daných
+výkazech a jejich dostupnost:
+
+    available <- get_variable_availability(variables = c("r15013","r15013a"),
+                                            map = my_map,
+                                            forms = c("v03","v08")
+    available$tables
+    available$plots
+
+Vyžádané proměnné lze načíst funkcí get\_variables():
 
     tibble_list <- get_variables(variables = c("r15013","r15013a"), # Vektor vyhledávaných proměnných
                   map = my_map, # Mapa dat: není-li specifikována, funkce se ji pokusí najít v pracovním direktoriáři. Lze uvézt i adresu souboru obsahujícího mapu.
