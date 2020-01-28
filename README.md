@@ -31,15 +31,14 @@ Data MŠMT jsou sbírána skrze výkazy vyplňované řediteli škol. Data z
 jednotivých výkazů za každý rok jsou často rozdělená do několika
 excelových tabulek (sheets). Balíček operuje s názvy těchto tabulek.
 Názvy tabulek by měly v zálkladní podobě dodržovat následující formát:
-vXXYYaaa. Každý kód začíná písmenem "v". XX reprezentuje číslo výkazu a
+vXXYYaaa. Každý kód začíná písmenem “v”. XX reprezentuje číslo výkazu a
 YY rok. Pod znaky aaa bývá specifický podkód tabulky. Dělení na tabulky
 s podkódy ale není napříč lety konzistentní. Například data z výkazu
 M-03 za rok 2019 mohou být rozdělena do tabulek se jmény v0319a, v0319b,
 v0319c. Balíček obsahuje funkci která vrací tabulku s popisy kódů
 výkazů:
 
-    ## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), 
-    ## nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
+    ## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
     set_cz()
 
     ## [1] "LC_COLLATE=English_United States.1250;LC_CTYPE=English_United States.1250;LC_MONETARY=English_United States.1250;LC_NUMERIC=C;LC_TIME=English_United States.1250"
@@ -112,11 +111,11 @@ souboru
 ### Načtení mapy
 
 Po uložení lze objekt s mapou kdykoliv načíst, buď za použití plné
-adresy...
+adresy…
 
-    my_map <- readRDS("E:/EDU/Data/MSMT_data_map.RDATA")
+    my_map <- readRDS("C:/EDU/Data/MSMT_data_map.RDATA")
 
-...nebo, je-li soubor v pracovním direktoriáři, názvem souboru:
+…nebo, je-li soubor v pracovním direktoriáři, názvem souboru:
 
     my_map <- readRDS("MSMT_data_map.RDATA")
 
@@ -163,23 +162,101 @@ rozdílů mezi tabulkami.
 Využití
 -------
 
-Když je mapa vytvořena nebo načtena, funkce balíčku s její
-pomocí identifikuje soubory obsahující vyhledávané proměnné a následně
-hodnoty těchto proměnných načte do nového objektu. I za využití mapy
-může vyhledávání trvat několik okamžiků.
+Když je mapa vytvořena nebo načtena, funkce balíčku s její pomocí
+identifikuje soubory obsahující vyhledávané proměnné a následně hodnoty
+těchto proměnných načte do nového objektu. I za využití mapy může
+vyhledávání trvat několik okamžiků.
 
 V první řadě lze mapu využít ke zjištění dostupnosti proměnných. Funkce
-get\_variable\_availability() přijímá vektor vyžádaných proměnných a 
+get\_variable\_availability() přijímá vektor vyžádaných proměnných a
 výkazů. Vrací list s tibbles obsahujícími vyžádané proměnné v daných
 výkazech a jejich dostupnost:
 
     available <- get_variable_availability(variables = c("r15013","r15013a"),
-                                            map = my_map,
-                                            forms = c("v03","v08")
+                                                map = my_map,
+                                                forms = c("v03","v08"))
     available$tables
+
+    ## $v03
+    ## # A tibble: 8 x 3
+    ##   year  r15013 r15013a
+    ##   <chr> <chr>  <chr>  
+    ## 1 11    Yes    No     
+    ## 2 12    Yes    No     
+    ## 3 13    Yes    No     
+    ## 4 14    Yes    No     
+    ## 5 15    Yes    No     
+    ## 6 16    Yes    Yes    
+    ## 7 17    Yes    Yes    
+    ## 8 18    Yes    Yes    
+    ## 
+    ## $v08
+    ## # A tibble: 8 x 3
+    ##   year  r15013 r15013a
+    ##   <chr> <chr>  <chr>  
+    ## 1 11    No     No     
+    ## 2 12    Yes    No     
+    ## 3 13    Yes    No     
+    ## 4 14    Yes    No     
+    ## 5 15    Yes    No     
+    ## 6 16    Yes    Yes    
+    ## 7 17    Yes    Yes    
+    ## 8 18    Yes    Yes
+
     available$plots
 
-Vyžádané proměnné lze načíst funkcí get\_variables():
+    ## $v03
+
+![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+
+    ## 
+    ## $v08
+
+![](README_files/figure-markdown_strict/unnamed-chunk-12-2.png)
+
+V případě potřeby většího mnořství proměnných je možné zrekonstruovat
+názvy z výkazových tabulek funkcí get\_table\_names()
+
+    variable_names <- get_table_names(table_ind = "3B", 
+                    row_inds = 1:14, 
+                    col_inds = 2:10, 
+                    extra_col = c("10a","10b"))
+
+    print(variable_names)
+
+    ##       [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]    
+    ##  [1,] "r3b012" "r3b013" "r3b014" "r3b015" "r3b016" "r3b017" "r3b018" "r3b019"
+    ##  [2,] "r3b022" "r3b023" "r3b024" "r3b025" "r3b026" "r3b027" "r3b028" "r3b029"
+    ##  [3,] "r3b032" "r3b033" "r3b034" "r3b035" "r3b036" "r3b037" "r3b038" "r3b039"
+    ##  [4,] "r3b042" "r3b043" "r3b044" "r3b045" "r3b046" "r3b047" "r3b048" "r3b049"
+    ##  [5,] "r3b052" "r3b053" "r3b054" "r3b055" "r3b056" "r3b057" "r3b058" "r3b059"
+    ##  [6,] "r3b062" "r3b063" "r3b064" "r3b065" "r3b066" "r3b067" "r3b068" "r3b069"
+    ##  [7,] "r3b072" "r3b073" "r3b074" "r3b075" "r3b076" "r3b077" "r3b078" "r3b079"
+    ##  [8,] "r3b082" "r3b083" "r3b084" "r3b085" "r3b086" "r3b087" "r3b088" "r3b089"
+    ##  [9,] "r3b092" "r3b093" "r3b094" "r3b095" "r3b096" "r3b097" "r3b098" "r3b099"
+    ## [10,] "r3b102" "r3b103" "r3b104" "r3b105" "r3b106" "r3b107" "r3b108" "r3b109"
+    ## [11,] "r3b112" "r3b113" "r3b114" "r3b115" "r3b116" "r3b117" "r3b118" "r3b119"
+    ## [12,] "r3b122" "r3b123" "r3b124" "r3b125" "r3b126" "r3b127" "r3b128" "r3b129"
+    ## [13,] "r3b132" "r3b133" "r3b134" "r3b135" "r3b136" "r3b137" "r3b138" "r3b139"
+    ## [14,] "r3b142" "r3b143" "r3b144" "r3b145" "r3b146" "r3b147" "r3b148" "r3b149"
+    ##       [,9]      [,10]      [,11]     
+    ##  [1,] "r3b0110" "r3b0110b" "r3b0110a"
+    ##  [2,] "r3b0210" "r3b0210b" "r3b0210a"
+    ##  [3,] "r3b0310" "r3b0310b" "r3b0310a"
+    ##  [4,] "r3b0410" "r3b0410b" "r3b0410a"
+    ##  [5,] "r3b0510" "r3b0510b" "r3b0510a"
+    ##  [6,] "r3b0610" "r3b0610b" "r3b0610a"
+    ##  [7,] "r3b0710" "r3b0710b" "r3b0710a"
+    ##  [8,] "r3b0810" "r3b0810b" "r3b0810a"
+    ##  [9,] "r3b0910" "r3b0910b" "r3b0910a"
+    ## [10,] "r3b1010" "r3b1010b" "r3b1010a"
+    ## [11,] "r3b1110" "r3b1110b" "r3b1110a"
+    ## [12,] "r3b1210" "r3b1210b" "r3b1210a"
+    ## [13,] "r3b1310" "r3b1310b" "r3b1310a"
+    ## [14,] "r3b1410" "r3b1410b" "r3b1410a"
+
+Když je jasno, jaké proměnné jsou třeba, lze použít funkci
+get\_variables() k jejich získání
 
     tibble_list <- get_variables(variables = c("r15013","r15013a"), # Vektor vyhledávaných proměnných
                   map = my_map, # Mapa dat: není-li specifikována, funkce se ji pokusí najít v pracovním direktoriáři. Lze uvézt i adresu souboru obsahujícího mapu.
@@ -255,11 +332,11 @@ Propojování s dalšími daty
 
 Takto vzniklé soubory lze přes identifikátory škol propojit s dalšími
 datovými soubory. Tyto identifikátory se v datech vyskytují čtyři:
-"red\_izo","izo","p\_izo" a "izonew". Identifikátor "red\_izo" značí
+“red\_izo”,“izo”,“p\_izo” a “izonew”. Identifikátor “red\_izo” značí
 ředitelství, pod které může spadat jedno, ale i několik školských
-zařízení. Identifikátory "izo","p\_izo" a "izonew" pak značí jednotlivá
-zařízení, s tím, že v některých letech se objevuje "p\_izo" a v
-některých "izonew". V tuhle chvíli sice mám teorii o tom, kde se berou,
+zařízení. Identifikátory “izo”,“p\_izo” a “izonew” pak značí jednotlivá
+zařízení, s tím, že v některých letech se objevuje “p\_izo” a v
+některých “izonew”. V tuhle chvíli sice mám teorii o tom, kde se berou,
 ale musím ji ještě ověřit.
 
 V následujícím příkladě propojuji na základě red\_izo data z výkazů s
@@ -311,4 +388,4 @@ S daty lze pak dělat psí kusy.
 
     ## Warning: Removed 6215 rows containing non-finite values (stat_sum).
 
-![](README_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-18-1.png)
