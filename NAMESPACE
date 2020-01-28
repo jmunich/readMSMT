@@ -2,6 +2,7 @@
 
 export(form_codes)
 export(get_locations)
+export(get_table_names)
 export(get_variable_availability)
 export(get_variables)
 export(get_varnames)
