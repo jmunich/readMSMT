@@ -36,6 +36,8 @@ get_variable_availability <- function(variables, map = NULL, forms = NULL, print
                        simplify = "matrix")) %>%
     `colnames<-`(variables) 
   
+  absent <- colSums(occu_vec)==0
+  
   tib_list <- list()
   for(i in 1:length(forms)){
     tib_list[[i]] <- occu_vec %>%
@@ -67,7 +69,8 @@ get_variable_availability <- function(variables, map = NULL, forms = NULL, print
   }
   
   output <- list(tables = tib_list,
-                 plots = plot_list)
+                 plots = plot_list,
+                 absent_variables = absent)
   
   return(output)
 }
