@@ -1,5 +1,6 @@
 Úvod
 ----
+Tento tutorial lze v plnější podobě najít zde: https://jmunich.github.io/readMSMT/
 
 Účel balíčku readMSMT je poskytnout nástroj zjednodušující práci s daty
 z výkazů sbíraných MŠMT. Jelikož data vyžádatelná občanem mohou nabývat
