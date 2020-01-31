@@ -9,12 +9,12 @@ proměnné z let a výkazů vybraných uživatelem v přehledné podobě. Účel
 balíčku je následující:
 
 1.  Vytvořit mapu uložených dat
-2.  Na požádání vrátit vyžádané proměnné
-3.  Usnadnit propojování s jinými datovými sety
+2.  Usnadnit indexování a vyhledávání dostupnosti proměnných
+3.  Na povel vrátit vyžádané proměnné
 
-Balíček readMSMT operuje na základě balíčků dplyr a readxl. Využívá
-syntax a funkce z tidyverse, ale lze s ním pracovat i bez znalosti
-těchto balíčků.
+Balíček readMSMT operuje na základě balíčků dplyr a readxl. Funkce
+využívají syntax a funkce z tidyverse, ale lze s nimi pracovat i bez
+znalosti těchto balíčků.
 
 Začněte instalací balíčku:
 
@@ -27,23 +27,31 @@ A pokračujte jeho spuštěním:
 Využití
 -------
 
+### O výkazech MŠMT
+
+První krok je získání samotných dat, která v době napsání balíčku nejsou
+dostupná online. Data lze získat buď přátelským kontaktování MŠMT, nebo
+formálně přes žádost podle zákona č. 106/1999 Sb., O svobodném přístupu
+k informacím (vzor žádosti by měl být snadno dohledatelný). Data by měla
+být zorganizována podle níže popsaného kódování. Po získání stačí data
+uložit do jedné složky.
+
 Data MŠMT jsou sbírána skrze výkazy vyplňované řediteli škol. Data z
-jednotivých výkazů za každý rok jsou často rozdělená do několika
+jednotlivých výkazů za každý rok jsou často rozdělená do několika
 excelových tabulek (sheets). Balíček operuje s názvy těchto tabulek.
 Názvy tabulek by měly v zálkladní podobě dodržovat následující formát:
 vXXYYaaa. Každý kód začíná písmenem “v”. XX reprezentuje číslo výkazu a
-YY rok. Pod znaky aaa bývá specifický podkód tabulky. Dělení na tabulky
-s podkódy ale není napříč lety konzistentní. Například data z výkazu
-M-03 za rok 2019 mohou být rozdělena do tabulek se jmény v0319a, v0319b,
-v0319c. Balíček obsahuje funkci která vrací tabulku s popisy kódů
-výkazů:
+YY rok. Balíček obsahuje funkci, která vrací přehled výkazů s popisy
+kódů. Pro přepnutí místního locale do UTF-8 encoding (pro práci se
+speciálními symboly v Českém jazyce, jako je ‘Š’) můžete využít funkci
+set\_cz():
 
-    ## Pozn. pro práci se speciálními charaktery, jako jsou písmena s háčky, lze aktivovat funkci set_cz(), nebo její aktivaci specifikovat ve funkci form_codes(cz = TRUE). Funkce není nezbytná pro fungování balíčku 
     set_cz()
 
     ## [1] "LC_COLLATE=English_United States.1250;LC_CTYPE=English_United States.1250;LC_MONETARY=English_United States.1250;LC_NUMERIC=C;LC_TIME=English_United States.1250"
 
     guide <- form_codes()
+    ## set_cz lze využít i přímo ve form_codes(cz = TRUE)
     print(guide)
 
     ## # A tibble: 23 x 3
@@ -61,14 +69,17 @@ výkazů:
     ## 10 Zarízení pro výkon ústavní-ochrané výchovy 31.10. V14        M 14-01 
     ## # ... with 13 more rows
 
+Mezi hodnotami kod\_simple lze najít výše popsané hodnoty vXX pro další
+vyhledávání.
+
+Pod znaky aaa bývá specifický podkód tabulky. Dělení na tabulky s
+podkódy ale není napříč lety konzistentní. Například data z výkazu M-03
+za rok 2019 mohou být rozdělena do tabulek se jmény v0319a, v0319b,
+v0319c, zatímco v předchozím roce byla dostupná pouze v tabulkách v0318a
+a v 0318b.
+
 Setup
 -----
-
-První krok je samozřejmě získání samotných dat. To lze buď přátelským
-kontaktování MŠMT, nebo formálně přes žádost podle zákona č. 106/1999
-Sb., o svobodném přístupu k informacím (vzor žádosti by měl být snadno
-dohledatelný). Data by měla být zorganizována podle výše popsaného
-kódování. Poté je stačí uložit do jedné složky.
 
 Jednotlivé tabulky poskytuje MŠMT buď ve formátu .xls nebo .xlsx. Z toho
 důvodu readMSMT využívá funkci read\_excel() z balíčku readxl. Opakované
@@ -82,12 +93,16 @@ struktury složky s daty nebo obsahu datových souborů.
 
 ### Vytvoření mapy souborů a proměnných
 
-Funkce vytvoří soubor *MSMT\_data\_map.RDATA*, který bude uložen v
-pracovním direktoriáři k načtení při dalším využtí dat. Vytvoření
-souboru může zabrat nějaký čas. Když se program dostane k pročítání
-jednotlivých souborů, začne svůj pokrok zobrazovat v konzoli. Existuje
-několi způsobů, jak lze mapu vytvořit. Vytvoříte-li mapu s uložením,
-stačí ji vytvořit pouze jednou.
+Funkce map\_folders() vytvoří soubor *MSMT\_data\_map.RDATA*, který bude
+uložen v pracovním direktoriáři k načtení při dalším využtí dat.
+Vytvoření souboru může zabrat nějaký čas. Když se program dostane k
+pročítání jednotlivých souborů, začne svůj pokrok zobrazovat v konzoli.
+Existuje několi způsobů, jak lze mapu vytvořit. Vytvoříte-li mapu s
+uložením, stačí ji vytvořit pouze jednou (a poté znovu až při přidání
+nových souborů do složky). Ve funkci lze specifikovat, kde se data
+nachází (*location*), zda (a kam) má být mapa uložena (*save\_map*) a
+zda má být navrácen objekt s mapou (*return\_map*). Následují příklady
+využití funkce.
 
 Pro vytvoření mapy, je-li složka s daty podsložkou pracovního
 direktoriáře:
@@ -121,11 +136,10 @@ adresy…
 
 ### Struktura mapy
 
-Mapa dat obsahuje tři objekty. První je tabulka meta\_data, která
-shrnuje lokace soubourů s relevantními daty (directory), název tabulky a
-jeho verzi v lowercase (sheet\_name a sheet), kód výkazu (form), rok
-(year) a počet výskytů tabulky v datech pro případ duplikátů
-(occurences).
+Mapa dat obsahuje tři objekty. První je tabulka *meta\_data*, která
+shrnuje lokace relevantních souborů, název tabulky a jeho verzi v
+lowercase (sheet\_name a sheet), kód výkazu (form), rok (year) a počet
+výskytů tabulky v datech pro případ duplikátů (occurrences).
 
     my_map$meta_data
 
@@ -145,19 +159,18 @@ jeho verzi v lowercase (sheet\_name a sheet), kód výkazu (form), rok
     ## 10 E:/EDU/Data/data/MSMT//2011_12/v0~ v0311a_5   v0311a~ v03   11              1
     ## # ... with 733 more rows
 
-Další dva objekty obsahují listy s názvy proměnných v jednotlivých
-tabulkách. Objekt varlist obsahuje původní názvy proměnných, objekt
-varlist\_lc obsahuje názvy transformované do lowercase, pro případ
-rozdílů mezi tabulkami.
+Další dva objekty *varlist* a *varlist\_lc* obsahují listy s názvy
+proměnných v jednotlivých tabulkách. Objekt varlist obsahuje původní
+názvy proměnných, objekt varlist\_lc obsahuje názvy transformované do
+lowercase, pro případ rozdílů mezi tabulkami.
 
-    ## Prvních třicet proměnných první tabulky
-    head(my_map$varlist[[1]], 30)
+    ## Prvních dvacet proměnných první tabulky
+    head(my_map$varlist[[1]], 20)
 
     ##  [1] "idc"       "red_izo"   "izo"       "list"      "izonew"    "zriz"     
     ##  [7] "ulice"     "misto"     "typ"       "spr_urad3" "vusc"      "jazyk_s"  
     ## [13] "rok"       "nvusc"     "ikf"       "zrus"      "zar_naz"   "dp"       
-    ## [19] "sp"        "sp_skoly"  "pu"        "r01012"    "r01013"    "r01022"   
-    ## [25] "r01023"    "r01032"    "r01042"    "r01043"    "r03012"    "r03013"
+    ## [19] "sp"        "sp_skoly"
 
 Využití
 -------
@@ -167,225 +180,214 @@ identifikuje soubory obsahující vyhledávané proměnné a následně hodnoty
 těchto proměnných načte do nového objektu. I za využití mapy může
 vyhledávání trvat několik okamžiků.
 
-V první řadě lze mapu využít ke zjištění dostupnosti proměnných. Funkce
-get\_variable\_availability() přijímá vektor vyžádaných proměnných a
-výkazů. Vrací list s tibbles obsahujícími vyžádané proměnné v daných
-výkazech a jejich dostupnost:
+### Názvy proměnných
 
-    available <- get_variable_availability(variables = c("r15013","r15013a"),
-                                                map = my_map,
-                                                forms = c("v03","v08"))
-    available$tables
+Název proměnné lze vyčíst z tabulek ve pdf souborech výkazů. Struktura
+názvu je **r číslo-řádku číslo-sloupce**. Například v tabulce I z výkazu
+M-3 by celkový počet (sloupec 2) žáků kteří ukončili povinnou školní
+docházku (řádek *0101*) byl pro každou školu uveden pod proměnnou
+**r01012**.
 
-    ## $v03
-    ## # A tibble: 8 x 3
-    ##   year  r15013 r15013a
-    ##   <chr> <chr>  <chr>  
-    ## 1 11    Yes    No     
-    ## 2 12    Yes    No     
-    ## 3 13    Yes    No     
-    ## 4 14    Yes    No     
-    ## 5 15    Yes    No     
-    ## 6 16    Yes    Yes    
-    ## 7 17    Yes    Yes    
-    ## 8 18    Yes    Yes    
-    ## 
-    ## $v08
-    ## # A tibble: 8 x 3
-    ##   year  r15013 r15013a
-    ##   <chr> <chr>  <chr>  
-    ## 1 11    No     No     
-    ## 2 12    Yes    No     
-    ## 3 13    Yes    No     
-    ## 4 14    Yes    No     
-    ## 5 15    Yes    No     
-    ## 6 16    Yes    Yes    
-    ## 7 17    Yes    Yes    
-    ## 8 18    Yes    Yes
+<img src="Tabulka.png" width="90%" />
 
-    available$plots
+### Získávání většího počtu názvů proměnných
 
-    ## $v03
+Vypisovat jména proměnných pro velké tabulky je mimořádná ztráta času.
+Balíček proto obsahuje funkci *get\_table\_names*, která rekonstruuje
+názvy proměnných v tabulce do snadno manipulovatelné matice. Funkce
+obsahuje parametry **table\_ind**, který obsahuje indikátor tabulky
+(zpravidla první dvě čísla u kódu řádku), *row\_inds* pro rozsah hodnot
+řádků a *col\_inds* pro žádaný rozsah sloupců.
 
-![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+Některé tabulky obsahují proměnné vložené v pozdějších letech. Aby se
+nenarušila původní struktura názvů proměnných, mívají takové koncovku
+“a”, “b” etc. Tyto speciální indexy lze manuálně doplnit parametry
+*extra\_row* a *extra\_col*.
 
-    ## 
-    ## $v08
+Pro rekonstrukci výše uvedené tabulky lze použít:
 
-![](README_files/figure-markdown_strict/unnamed-chunk-12-2.png)
-
-V případě potřeby většího mnořství proměnných je možné zrekonstruovat
-názvy z výkazových tabulek funkcí get\_table\_names()
-
-    variable_names <- get_table_names(table_ind = "3B", 
-                    row_inds = 1:14, 
-                    col_inds = 2:10, 
-                    extra_col = c("10a","10b"))
+    variable_names <- get_table_names(table_ind = "01", # Index tabulky
+                    row_inds = c(1,4:11), # Uvedené řádky (v tabulce chybí 2 a 3)
+                    col_inds = 2:5, # Sloupce
+                    extra_row = "07a") # Speciální řádek 7a
 
     print(variable_names)
 
-    ##       [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]    
-    ##  [1,] "r3b012" "r3b013" "r3b014" "r3b015" "r3b016" "r3b017" "r3b018" "r3b019"
-    ##  [2,] "r3b022" "r3b023" "r3b024" "r3b025" "r3b026" "r3b027" "r3b028" "r3b029"
-    ##  [3,] "r3b032" "r3b033" "r3b034" "r3b035" "r3b036" "r3b037" "r3b038" "r3b039"
-    ##  [4,] "r3b042" "r3b043" "r3b044" "r3b045" "r3b046" "r3b047" "r3b048" "r3b049"
-    ##  [5,] "r3b052" "r3b053" "r3b054" "r3b055" "r3b056" "r3b057" "r3b058" "r3b059"
-    ##  [6,] "r3b062" "r3b063" "r3b064" "r3b065" "r3b066" "r3b067" "r3b068" "r3b069"
-    ##  [7,] "r3b072" "r3b073" "r3b074" "r3b075" "r3b076" "r3b077" "r3b078" "r3b079"
-    ##  [8,] "r3b082" "r3b083" "r3b084" "r3b085" "r3b086" "r3b087" "r3b088" "r3b089"
-    ##  [9,] "r3b092" "r3b093" "r3b094" "r3b095" "r3b096" "r3b097" "r3b098" "r3b099"
-    ## [10,] "r3b102" "r3b103" "r3b104" "r3b105" "r3b106" "r3b107" "r3b108" "r3b109"
-    ## [11,] "r3b112" "r3b113" "r3b114" "r3b115" "r3b116" "r3b117" "r3b118" "r3b119"
-    ## [12,] "r3b122" "r3b123" "r3b124" "r3b125" "r3b126" "r3b127" "r3b128" "r3b129"
-    ## [13,] "r3b132" "r3b133" "r3b134" "r3b135" "r3b136" "r3b137" "r3b138" "r3b139"
-    ## [14,] "r3b142" "r3b143" "r3b144" "r3b145" "r3b146" "r3b147" "r3b148" "r3b149"
-    ##       [,9]      [,10]      [,11]     
-    ##  [1,] "r3b0110" "r3b0110b" "r3b0110a"
-    ##  [2,] "r3b0210" "r3b0210b" "r3b0210a"
-    ##  [3,] "r3b0310" "r3b0310b" "r3b0310a"
-    ##  [4,] "r3b0410" "r3b0410b" "r3b0410a"
-    ##  [5,] "r3b0510" "r3b0510b" "r3b0510a"
-    ##  [6,] "r3b0610" "r3b0610b" "r3b0610a"
-    ##  [7,] "r3b0710" "r3b0710b" "r3b0710a"
-    ##  [8,] "r3b0810" "r3b0810b" "r3b0810a"
-    ##  [9,] "r3b0910" "r3b0910b" "r3b0910a"
-    ## [10,] "r3b1010" "r3b1010b" "r3b1010a"
-    ## [11,] "r3b1110" "r3b1110b" "r3b1110a"
-    ## [12,] "r3b1210" "r3b1210b" "r3b1210a"
-    ## [13,] "r3b1310" "r3b1310b" "r3b1310a"
-    ## [14,] "r3b1410" "r3b1410b" "r3b1410a"
+    ##       [,1]      [,2]      [,3]      [,4]     
+    ##  [1,] "r01012"  "r01013"  "r01014"  "r01015" 
+    ##  [2,] "r01042"  "r01043"  "r01044"  "r01045" 
+    ##  [3,] "r01052"  "r01053"  "r01054"  "r01055" 
+    ##  [4,] "r01062"  "r01063"  "r01064"  "r01065" 
+    ##  [5,] "r01072"  "r01073"  "r01074"  "r01075" 
+    ##  [6,] "r01082"  "r01083"  "r01084"  "r01085" 
+    ##  [7,] "r0107a2" "r0107a3" "r0107a4" "r0107a5"
+    ##  [8,] "r01092"  "r01093"  "r01094"  "r01095" 
+    ##  [9,] "r01102"  "r01103"  "r01104"  "r01105" 
+    ## [10,] "r01112"  "r01113"  "r01114"  "r01115"
+
+Chceme-li pak získat například názvy všech proměnných s celkovými počtem
+žáků z běžných tříd, stačí zvolit správný řádek vzniklé matice:
+
+    my_varnames <- variable_names[,1]
+
+    print(my_varnames)
+
+    ##  [1] "r01012"  "r01042"  "r01052"  "r01062"  "r01072"  "r01082"  "r0107a2"
+    ##  [8] "r01092"  "r01102"  "r01112"
+
+### Dostupnost proměnných mezi lety
+
+Máme-li názvy proměnných, můžeme využít mapu souborů ke zjištění jejich
+dostupnosti napříč lety. Funkce get\_variable\_availability() přijímá
+vektor vyžádaných proměnných a výkazů. Vrací list s tibbles obsahujícími
+vyžádané proměnné v daných výkazech a jejich dostupnost. Jelikož stejný
+název proměnné se může objevit mezi formuláři, je potřeba specifikovat,
+kde mají být vyhledány.
+
+    available <- get_variable_availability(variables = my_varnames,
+                                                map = my_map, # Je-li mapa v pracovním direktoriáři, 
+                                                              # není třeba ji uvádět
+                                                forms = c("v03")) # Výkaz M-3
+
+Funkce navrátí tibble s dostupností (je-li specifikován vektor výkazů,
+vrátí tibble pro každý výkaz):
+
+    available$tables$v03
+
+    ## # A tibble: 8 x 11
+    ##   year  r01012 r01042 r01052 r01062 r01072 r01082 r0107a2 r01092 r01102 r01112
+    ##   <chr> <chr>  <chr>  <chr>  <chr>  <chr>  <chr>  <chr>   <chr>  <chr>  <chr> 
+    ## 1 11    Yes    Yes    Yes    Yes    Yes    Yes    No      Yes    Yes    Yes   
+    ## 2 12    Yes    Yes    Yes    Yes    Yes    Yes    No      Yes    Yes    Yes   
+    ## 3 13    Yes    Yes    Yes    Yes    Yes    Yes    No      Yes    Yes    Yes   
+    ## 4 14    Yes    Yes    Yes    Yes    Yes    Yes    No      Yes    Yes    Yes   
+    ## 5 15    Yes    Yes    Yes    Yes    Yes    Yes    No      Yes    Yes    Yes   
+    ## 6 16    Yes    Yes    Yes    Yes    Yes    Yes    Yes     Yes    Yes    Yes   
+    ## 7 17    Yes    Yes    Yes    Yes    Yes    Yes    Yes     Yes    Yes    Yes   
+    ## 8 18    Yes    Yes    Yes    Yes    Yes    Yes    Yes     Yes    Yes    Yes
+
+Funkce dostupnost rovněž vyobrazuje pro snadnější kontrolu. Například u
+speciální proměnné *r0107a2* lze vidět, že byla přidána až v roce 2016:
+
+    available$plots$v03
+
+![](README_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+
+### Získávání samotných proměnných
 
 Když je jasno, jaké proměnné jsou třeba, lze použít funkci
-get\_variables() k jejich získání
+*get\_variables()* k jejich získání. Funkce využije existující mapu,
+vybere soubory obsahující žádoucí proměnné a pro každý rok vrátí tabulku
+vyžádaných dat. Je-li v souboru pro jeden rok více relevantních souborů
+(pravděpodobně duplikáty), funkce vybere první soubor a vydá upozornění.
+Chybí-li nějaké proměnná v daném roce, vrátí se tabulka bez této
+proměnné.
 
-    tibble_list <- get_variables(variables = c("r15013","r15013a"), # Vektor vyhledávaných proměnných
-                  map = my_map, # Mapa dat: není-li specifikována, funkce se ji pokusí najít v pracovním direktoriáři. Lze uvézt i adresu souboru obsahujícího mapu.
-                  joint = c("izo","red_izo"), # Názvy dalších proměnných, které budou zahrnuty do výběru. Defaultně obsahuje základní identifikátory
-                  forms = "v08", # Vektor (nebo samostatný character) určující žádoucí výkazy. Prázdný argument prohledá všechny výkazy
-                  years = c("12","13","14","15","16","17","18") # Vektor obsahující žádoucí roky. Prázdný argument prohledá všechny roky
+    tibble_list <- get_variables(variables = my_varnames, 
+                  map = my_map, # Je-li mapa v pracovním direktoriáři, 
+                                # není třeba ji uvádět 
+                  joint = c("izo","red_izo", "vusc"), # Názvy dalších proměnných,
+                                                      # například identifikátorů. Obsahuje
+                                                      # defaultní hodnoty
+                  forms = "v03", # Vektor (nebo samostatný character) žádaných výkazů
+                  years = c("12","13","14","15","16","17","18") # Vektor obsahující žádoucí roky. 
+                                                                # Prázdný argument prohledá 
+                                                                # všechny dostupné roky
                   )
 
-    ## Warning in get_variables(variables = c("r15013", "r15013a"), map = my_map, :
-    ## File(s) v0817a_3 have two or more occurrences. Using the first file.
+    ## Warning in get_variables(variables = my_varnames, map = my_map, joint =
+    ## c("izo", : File(s) v0316a_1, v0317a_1 have two or more occurrences. Using the
+    ## first file.
 
 Funkce vrací list se dvěma objekty. První jsou průvodná meta\_data pro
 využité soubory. Druhý objekt (variables) obsahuje tabulky se získanými
-daty. Ke každé tabulce je přidána proměnná s příslušným rokem.
+daty. Ke každé tabulce je přidána proměnná s příslušným rokem. Příklad
+tabulek za roky 2012 a 2013:
 
-    tibble_list$variables$v0812a_2
+    head(tibble_list$variables$v0312a_1)
 
-    ## # A tibble: 1,379 x 4
-    ##    year  izo       red_izo   r15013
-    ##    <chr> <chr>     <chr>      <dbl>
-    ##  1 12    108022676 600007481      0
-    ##  2 12    108022722 600007472      0
-    ##  3 12    108023079 600005569      0
-    ##  4 12    108023087 600005585      0
-    ##  5 12    108024148 600012271      0
-    ##  6 12    108026736 600013014      6
-    ##  7 12    108026761 600024695      0
-    ##  8 12    108027457 600015831      5
-    ##  9 12    108028127 600013375      0
-    ## 10 12    108028135 600013260      0
-    ## # ... with 1,369 more rows
+    ## # A tibble: 6 x 13
+    ##   year  izo   red_izo vusc  r01012 r01042 r01052 r01062 r01072 r01082 r01092
+    ##   <chr> <chr> <chr>   <chr>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+    ## 1 12    0000~ 600023~ CZ05~      0      0      0      0      0      0      0
+    ## 2 12    0000~ 600023~ CZ05~      0      0      0      0      0      0      0
+    ## 3 12    0001~ 600096~ CZ05~     49      1      2     46      0     13     13
+    ## 4 12    0001~ 600096~ CZ05~     19      0      3     16      0      0      0
+    ## 5 12    0001~ 600001~ CZ05~     19      0      3     15      1      0      0
+    ## 6 12    0002~ 600115~ CZ06~     22      0      0     22      0      3      3
+    ## # ... with 2 more variables: r01102 <dbl>, r01112 <dbl>
 
-    tibble_list$variables$v0813a_2
+    head(tibble_list$variables$v0313a_1)
 
-    ## # A tibble: 1,343 x 4
-    ##    year  izo       red_izo   r15013
-    ##    <chr> <chr>     <chr>      <dbl>
-    ##  1 13    000013757 600006654     25
-    ##  2 13    000053155 600014614      5
-    ##  3 13    000053163 600014649      3
-    ##  4 13    000055069 600015408      0
-    ##  5 13    000055077 600015416      0
-    ##  6 13    000055107 600015483      0
-    ##  7 13    000064556 600006000      1
-    ##  8 13    000068772 600006972      2
-    ##  9 13    000068781 600006913      5
-    ## 10 13    000068799 600007081      1
-    ## # ... with 1,333 more rows
+    ## # A tibble: 6 x 13
+    ##   year  izo   red_izo vusc  r01012 r01042 r01052 r01062 r01072 r01082 r01092
+    ##   <chr> <chr> <chr>   <chr>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+    ## 1 13    0476~ 600035~ CZ01~     45      0      0     45      0     24     20
+    ## 2 13    0476~ 600041~ CZ01~     27      0      0     27      0      4      3
+    ## 3 13    0476~ 600041~ CZ01~     22      0      0     22      0     10      9
+    ## 4 13    0476~ 600035~ CZ01~     28      0      0     28      0     11      9
+    ## 5 13    0476~ 600035~ CZ01~     20      0      0     20      0      5      4
+    ## 6 13    0476~ 600035~ CZ01~     35      0      4     31      0      0      0
+    ## # ... with 2 more variables: r01102 <dbl>, r01112 <dbl>
 
 Takto vzniklý list lze například za využití balíčku dplyr propojit do
-jedné tabulky v long formátu.
+jedné tabulky v long formátu. Toto je možné v případě, že všechny
+proměnné v rámc rái roku byly uloženy ve stejném souboru.
+
+Poznámka: Pokud by se za každý rok vrátilo více tabulek (například pokud
+používám proměnné z tabulky I a z tabulky IX výkazu M-3), musím nejříve
+pro každý rok propojit tyto tabulky přes identifikátory škol, které by
+měly být v rámci let konzistentní, například funkcí
+*dplyr::left\_join(x, y, by = “izo”)*.
 
     long_data <- dplyr::bind_rows(tibble_list$variables)
-    long_data
+    head(long_data)
 
-    ## # A tibble: 9,852 x 5
-    ##    year  izo       red_izo   r15013 r15013a
-    ##    <chr> <chr>     <chr>      <dbl>   <dbl>
-    ##  1 12    108022676 600007481      0      NA
-    ##  2 12    108022722 600007472      0      NA
-    ##  3 12    108023079 600005569      0      NA
-    ##  4 12    108023087 600005585      0      NA
-    ##  5 12    108024148 600012271      0      NA
-    ##  6 12    108026736 600013014      6      NA
-    ##  7 12    108026761 600024695      0      NA
-    ##  8 12    108027457 600015831      5      NA
-    ##  9 12    108028127 600013375      0      NA
-    ## 10 12    108028135 600013260      0      NA
-    ## # ... with 9,842 more rows
+    ## # A tibble: 6 x 14
+    ##   year  izo   red_izo vusc  r01012 r01042 r01052 r01062 r01072 r01082 r01092
+    ##   <chr> <chr> <chr>   <chr>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+    ## 1 12    0000~ 600023~ CZ05~      0      0      0      0      0      0      0
+    ## 2 12    0000~ 600023~ CZ05~      0      0      0      0      0      0      0
+    ## 3 12    0001~ 600096~ CZ05~     49      1      2     46      0     13     13
+    ## 4 12    0001~ 600096~ CZ05~     19      0      3     16      0      0      0
+    ## 5 12    0001~ 600001~ CZ05~     19      0      3     15      1      0      0
+    ## 6 12    0002~ 600115~ CZ06~     22      0      0     22      0      3      3
+    ## # ... with 3 more variables: r01102 <dbl>, r01112 <dbl>, r0107a2 <dbl>
 
-Propojování s dalšími daty
---------------------------
+    unique(long_data$year)
 
-Takto vzniklé soubory lze přes identifikátory škol propojit s dalšími
-datovými soubory. Tyto identifikátory se v datech vyskytují čtyři:
-“red\_izo”,“izo”,“p\_izo” a “izonew”. Identifikátor “red\_izo” značí
-ředitelství, pod které může spadat jedno, ale i několik školských
-zařízení. Identifikátory “izo”,“p\_izo” a “izonew” pak značí jednotlivá
-zařízení, s tím, že v některých letech se objevuje “p\_izo” a v
-některých “izonew”. V tuhle chvíli sice mám teorii o tom, kde se berou,
-ale musím ji ještě ověřit.
+    ## [1] "12" "13" "14" "15" "16" "17" "18"
 
-V následujícím příkladě propojuji na základě red\_izo data z výkazů s
-daty z adresáře škol. Je důležité počítat s tím, že některé
-identifikátory nemusí být v adresáři obsažené. Pokusím se vymyslet, co s
-tím.
+S daty lze pak dělat psí kusy. Funkce *starts\_with()* a *ends\_with()*
+z tidyverse (popř. *matches()* a regex) jsou obzvlášť šikovné, protože
+se s nimi dají indexovat celé řádky nebo sloupce výkazových tabulek.
+Například se můžeme podívat na počet všech žáků, kteří ukončili školní
+docházku v sedmém ročníku ZŠ mezi regiony v čase.
 
-    adresy<-read_excel("E:/EDU/Data/data/IZOCODES/Adresar.xlsx")%>%
-      select(RED_IZO, Území, ORP)%>%
-      mutate_all(as.character)
-    names(adresy)<-tolower(names(adresy))
+    tab_1 <- as.vector(variable_names)
 
-    joint <- left_join(long_data,adresy, by = "red_izo")
-    unique(joint$území)
+    tibble_list_1 <- get_variables(variables = tab_1, 
+                  joint = "vusc",
+                  forms = "v03")
 
-    ##  [1] "CZ0207" "CZ0105" "CZ0523" NA       "CZ0525" "CZ0635" "CZ0641" "CZ0511"
-    ##  [9] "CZ0104" "CZ0102" "CZ0422" "CZ0513" "CZ0713" "CZ0323" "CZ0325" "CZ0805"
-    ## [17] "CZ0514" "CZ0426" "CZ0424" "CZ0724" "CZ0423" "CZ0804" "CZ0632" "CZ020B"
-    ## [25] "CZ0208" "CZ0209" "CZ0314" "CZ0644" "CZ0107" "CZ0425" "CZ0101" "CZ0103"
-    ## [33] "CZ0647" "CZ0109" "CZ0106" "CZ0108" "CZ0712" "CZ0202" "CZ0642" "CZ0421"
-    ## [41] "CZ0802" "CZ0714" "CZ0411" "CZ0531" "CZ0313" "CZ0803" "CZ0204" "CZ0721"
-    ## [49] "CZ0206" "CZ0533" "CZ0715" "CZ0317" "CZ0534" "CZ0646" "CZ0521" "CZ0532"
-    ## [57] "CZ0806" "CZ0645" "CZ0634" "CZ0722" "CZ0512" "CZ0327" "CZ0427" "CZ0316"
-    ## [65] "CZ0723" "CZ0643" "CZ0633" "CZ0201" "CZ0321" "CZ0711" "CZ0311" "CZ0631"
-    ## [73] "CZ0412" "CZ0203" "CZ010A" "CZ0326" "CZ0205" "CZ020C" "CZ0312" "CZ0522"
-    ## [81] "CZ0322" "CZ0413" "CZ0524" "CZ020A" "CZ0315" "CZ0801" "CZ0324"
+    ## Warning in get_variables(variables = tab_1, joint = "vusc", forms = "v03"):
+    ## File(s) v0316a_1, v0317a_1 have two or more occurrences. Using the first file.
 
-    print(joint)
+    long_data_1 <- dplyr::bind_rows(tibble_list_1$variables)
 
-    ## # A tibble: 9,852 x 7
-    ##    year  izo       red_izo   r15013 r15013a území  orp  
-    ##    <chr> <chr>     <chr>      <dbl>   <dbl> <chr>  <chr>
-    ##  1 12    108022676 600007481      0      NA CZ0207 2115 
-    ##  2 12    108022722 600007472      0      NA CZ0207 2115 
-    ##  3 12    108023079 600005569      0      NA CZ0105 1116 
-    ##  4 12    108023087 600005585      0      NA CZ0105 1116 
-    ##  5 12    108024148 600012271      0      NA CZ0523 5209 
-    ##  6 12    108026736 600013014      6      NA <NA>   <NA> 
-    ##  7 12    108026761 600024695      0      NA CZ0525 5203 
-    ##  8 12    108027457 600015831      5      NA CZ0635 6115 
-    ##  9 12    108028127 600013375      0      NA <NA>   <NA> 
-    ## 10 12    108028135 600013260      0      NA CZ0641 6201 
-    ## # ... with 9,842 more rows
+    long_data_1 %>%
+      mutate(vusc = substr(vusc, 1, 4)) %>%
+      group_by(year, vusc) %>%
+      summarise_all(sum) %>%
+      select(vusc, starts_with("r0104")) %>% # Vybrat čtvrtý řádek
+      select(vusc, matches("[a-z0-9]+2$|[a-z0-9]+4$")) %>% # Vybrat druhý a čtvrtý sloupec
+      ungroup() %>%
+      mutate(left_7 = rowSums(.[3:4])) %>%
+      ggplot(aes(x = ordered(year), y = left_7, color = vusc, group = vusc)) +
+      geom_point(show.legend = FALSE) +
+      geom_path(show.legend = FALSE)
 
-S daty lze pak dělat psí kusy.
+    ## Adding missing grouping variables: `year`Adding missing grouping variables:
+    ## `year`
 
-    ggplot(joint, aes(x = as.numeric(year), y=log(r15013), color=substr(území, 1,4), fill=substr(území, 1,4)))+
-      geom_count()+theme(legend.position = "none")+geom_line(aes(group=red_izo))
-
-    ## Warning: Removed 6215 rows containing non-finite values (stat_sum).
-
-![](README_files/figure-markdown_strict/unnamed-chunk-18-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-20-1.png)
