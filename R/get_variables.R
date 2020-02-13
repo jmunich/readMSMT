@@ -19,7 +19,7 @@ get_variables<-function(variables, joint=c("red_izo","izo","p_izo","izonew"), ma
 
   if(is.null(map)){
     if("MSMT_data_map.RDATA"%in%list.files(getwd())){
-    map <- readRDS(paste0(getwd(),"MSMT_data_map.RDATA"))
+    map <- readRDS(paste0(getwd(),"/MSMT_data_map.RDATA"))
     }else{
       stop("No map object or location specified and the map file is not in the working directory")
     }
