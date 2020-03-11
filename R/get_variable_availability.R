@@ -17,7 +17,7 @@ get_variable_availability <- function(variables, map = NULL, forms = NULL, print
   require(tidyverse, quietly = TRUE)
   if(is.null(map)){
     if("MSMT_data_map.RDATA"%in%list.files(getwd())){
-      map <- readRDS(paste0(getwd(),"MSMT_data_map.RDATA"))
+      map <- readRDS(paste0(getwd(),"/MSMT_data_map.RDATA"))
     }else{
       stop("No map object or location specified and the map file is not in the working directory")
     }
@@ -25,7 +25,7 @@ get_variable_availability <- function(variables, map = NULL, forms = NULL, print
   
   if(is.character(map)&(length(map)==1)){
     if("MSMT_data_map.RDATA"%in%list.files(getwd())){
-      map <- readRDS(paste0(map,"MSMT_data_map.RDATA"))
+      map <- readRDS(paste0(map,"/MSMT_data_map.RDATA"))
     }else{
       stop("Map file is not in the specified directory")
     }
