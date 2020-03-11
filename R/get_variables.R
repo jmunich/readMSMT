@@ -27,7 +27,7 @@ get_variables<-function(variables, joint=c("red_izo","izo","p_izo","izonew"), ma
 
   if(is.character(map)&(length(map)==1)){
     if("MSMT_data_map.RDATA"%in%list.files(getwd())){
-      map <- readRDS(paste0(map,"MSMT_data_map.RDATA"))
+      map <- readRDS(paste0(map,"/MSMT_data_map.RDATA"))
     }else{
       stop("Map file is not in the specified directory")
     }
